@@ -38,14 +38,19 @@ public class ServiceController {
         return new RestTemplate();
     }
 
-    @GetMapping("/healthz")
+    @GetMapping("/")
     @CircuitBreaker(name = HACKATHON_SERVICE, fallbackMethod = "hackathonFallback")
     @Bulkhead(name = HACKATHON_SERVICE, fallbackMethod = "hackathonFallback")
     @Retry(name = HACKATHON_SERVICE, fallbackMethod = "hackathonFallback")
-    @Cacheable(value="condition",condition="#number <= 4")
+    @Cacheable(value = "condition", condition = "#number <= 4")
     public ResponseEntity<ResponseDto> callApi(@RequestParam(value = "number") int numero) {
         ResponseDto objeto = restTemplate.getForObject(host + numero, ResponseDto.class);
         return new ResponseEntity<ResponseDto>(objeto, HttpStatus.OK);
+    }
+
+    @GetMapping("/healthz")
+    public ResponseEntity healthz() {
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     public ResponseEntity<String> hackathonFallback(Exception e) {
