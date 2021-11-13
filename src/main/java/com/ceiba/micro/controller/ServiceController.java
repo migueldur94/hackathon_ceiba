@@ -37,8 +37,9 @@ public class ServiceController {
 
     @GetMapping("/healthz")
     @CircuitBreaker(name = ORDER_SERVICE, fallbackMethod = "orderFallback")
-    public ResponseDto createOrder(@RequestParam(value = "number") int numero) {
-        return restTemplate.getForObject(host + numero, ResponseDto.class);
+    public ResponseEntity<ResponseDto> createOrder(@RequestParam(value = "number") int numero) {
+        ResponseDto objeto = restTemplate.getForObject(host + numero, ResponseDto.class);
+        return new ResponseEntity<ResponseDto>(objeto, HttpStatus.OK);
     }
 
     public ResponseEntity<String> orderFallback(Exception e) {
