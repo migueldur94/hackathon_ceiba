@@ -4,6 +4,7 @@ import io.github.resilience4j.bulkhead.annotation.Bulkhead;
 import io.github.resilience4j.retry.annotation.Retry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +42,7 @@ public class ServiceController {
     @CircuitBreaker(name = HACKATHON_SERVICE, fallbackMethod = "hackathonFallback")
     @Bulkhead(name = HACKATHON_SERVICE, fallbackMethod = "hackathonFallback")
     @Retry(name = HACKATHON_SERVICE, fallbackMethod = "hackathonFallback")
+    @Cacheable(value="condition",condition="#number <= 4")
     public ResponseEntity<ResponseDto> callApi(@RequestParam(value = "number") int numero) {
         ResponseDto objeto = restTemplate.getForObject(host + numero, ResponseDto.class);
         return new ResponseEntity<ResponseDto>(objeto, HttpStatus.OK);
