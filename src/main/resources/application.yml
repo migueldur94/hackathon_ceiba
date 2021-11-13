@@ -4,7 +4,7 @@ server:
 resilience4j:
   circuitbreaker:
     instances:
-      orderService:
+      hackathon:
         registerHealthIndicator: true
         eventConsumerBufferSize: 10
         automaticTransitionFromOpenToHalfOpenEnabled: true
@@ -26,3 +26,7 @@ management:
   endpoint:
     health:
       show-details: always
+
+application:
+  hackathon:
+    host: ${SVC_API_HOSTNAME}:${SVC_API_PORT}/
