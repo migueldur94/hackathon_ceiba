@@ -1,5 +1,7 @@
 package com.ceiba.micro.controller;
 
+import io.github.resilience4j.bulkhead.annotation.Bulkhead;
+import io.github.resilience4j.retry.annotation.Retry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -22,7 +24,7 @@ import javax.ws.rs.PathParam;
 @RequiredArgsConstructor
 public class ServiceController {
 
-    private static final String ORDER_SERVICE = "hackathon";
+    private static final String HACKATHON_SERVICE = "hackathon";
 
     @Value("${application.hackathon.host}?number=")
     private String host;
@@ -36,13 +38,15 @@ public class ServiceController {
     }
 
     @GetMapping("/healthz")
-    @CircuitBreaker(name = ORDER_SERVICE, fallbackMethod = "orderFallback")
-    public ResponseEntity<ResponseDto> createOrder(@RequestParam(value = "number") int numero) {
+    @CircuitBreaker(name = HACKATHON_SERVICE, fallbackMethod = "hackathonFallback")
+    @Bulkhead(name = HACKATHON_SERVICE, fallbackMethod = "hackathonFallback")
+    @Retry(name = HACKATHON_SERVICE, fallbackMethod = "hackathonFallback")
+    public ResponseEntity<ResponseDto> callApi(@RequestParam(value = "number") int numero) {
         ResponseDto objeto = restTemplate.getForObject(host + numero, ResponseDto.class);
         return new ResponseEntity<ResponseDto>(objeto, HttpStatus.OK);
     }
 
-    public ResponseEntity<String> orderFallback(Exception e) {
+    public ResponseEntity<String> hackathonFallback(Exception e) {
         return new ResponseEntity<String>("El API no puede responder", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
