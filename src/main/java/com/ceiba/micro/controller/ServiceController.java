@@ -38,7 +38,7 @@ public class ServiceController {
         return new RestTemplate();
     }
 
-    @GetMapping("/")
+    @GetMapping("/healthz")
     @CircuitBreaker(name = HACKATHON_SERVICE, fallbackMethod = "hackathonFallback")
     @Bulkhead(name = HACKATHON_SERVICE, fallbackMethod = "hackathonFallback")
     @Retry(name = HACKATHON_SERVICE, fallbackMethod = "hackathonFallback")
