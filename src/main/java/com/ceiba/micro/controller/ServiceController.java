@@ -49,7 +49,7 @@ public class ServiceController {
     }
 
     @GetMapping("/healthz")
-    public ResponseEntity healthz() {
+    public ResponseEntity<HttpStatus> healthz() {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
