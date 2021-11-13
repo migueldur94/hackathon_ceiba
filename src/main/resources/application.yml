@@ -8,11 +8,11 @@ resilience4j:
         registerHealthIndicator: true
         eventConsumerBufferSize: 10
         automaticTransitionFromOpenToHalfOpenEnabled: true
-        failureRateThreshold: 50
+        failureRateThreshold: 20
         minimumNumberOfCalls: 5
         permittedNumberOfCallsInHalfOpenState: 3
         slidingWindowSize: 10
-        waitDurationInOpenState: 5s
+        waitDurationInOpenState: 10s
         slidingWindowType: COUNT_BASED
 
 management:
@@ -29,4 +29,4 @@ management:
 
 application:
   hackathon:
-    host: ${SVC_API_HOSTNAME}:${SVC_API_PORT}/
+    host: ${SVC_API_HOSTNAME:http://api-9.hack.local}:${SVC_API_PORT:80}/

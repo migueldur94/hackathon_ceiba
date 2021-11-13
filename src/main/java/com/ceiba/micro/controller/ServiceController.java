@@ -37,16 +37,11 @@ public class ServiceController {
 
     @GetMapping("/healthz")
     @CircuitBreaker(name = ORDER_SERVICE, fallbackMethod = "orderFallback")
-    public ResponseEntity<ResponseDto> createOrder(@RequestParam(value = "number") int numero) {
-
-        ResponseDto response = restTemplate.getForObject(host + numero, ResponseDto.class);
-
-        return new ResponseEntity<ResponseDto>(response, HttpStatus.OK);
+    public ResponseDto createOrder(@RequestParam(value = "number") int numero) {
+        return restTemplate.getForObject(host + numero, ResponseDto.class);
     }
 
-
     public ResponseEntity<String> orderFallback(Exception e) {
-        return new ResponseEntity<String>("Item service is down", HttpStatus.OK);
-
+        return new ResponseEntity<String>("El API no puede responder", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
